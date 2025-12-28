@@ -1,66 +1,139 @@
-# Building a Multimodal RAG Pipeline with Elasticsearch: The Story of Gotham City
+# Multimodal RAG System
 
-This repository contains the code for implementing a Multimodal Retrieval-Augmented Generation (RAG) system using Elasticsearch. The system processes and analyzes different types of evidence (images, audio, text, and depth maps) to solve a crime in Gotham City.
+A powerful search system that understands and correlates information across different data types using multimodal embeddings and semantic search. Built with ImageBind, Elasticsearch, and LLM-powered analysis.
 
 ## Overview
 
-The pipeline demonstrates how to:
-- Generate unified embeddings for multiple modalities using ImageBind
-- Store and search vectors efficiently in Elasticsearch
-- Analyze evidence using GPT-4 to generate forensic reports
+This system enables unified search and analysis across multiple data modalities:
+- Generate embeddings for images, audio, text, and depth maps
+- Perform semantic similarity search across different data types
+- Analyze cross-modal connections using LLM reasoning
+- Generate comprehensive analytical reports
+
+## Architecture
+
+```
+┌─────────────────┐
+│  Input Data     │
+│ (any modality)  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  ImageBind      │
+│  Embeddings     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Elasticsearch   │
+│ Vector Search   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  LLM Analyzer   │
+│  (Groq/GPT)     │
+└─────────────────┘
+```
+
+## Features
+
+- **Multimodal Embeddings**: Uses Meta's ImageBind to generate unified embeddings for:
+  - Vision (images, depth maps)
+  - Audio (sound files, recordings)
+  - Text (documents, descriptions)
+  
+- **Semantic Search**: Elasticsearch-powered vector similarity search with cosine similarity
+
+- **Cross-Modal Analysis**: Find connections between different types of data
+
+- **LLM-Powered Insights**: Automated analysis and pattern recognition
 
 ## Prerequisites
 
-- Python 3.x
-- Elasticsearch cluster (cloud or local)
-- OpenAI API key - Setup an OpenAI account and create a [secret key](https://platform.openai.com/docs/quickstart)
-- 8GB+ RAM
-- GPU (optional but recommended)
+- Python 3.8+
+- Elasticsearch 8.17.1+
+- Groq API key
 
-## Code execution 
+## Installation
 
-We provide a Google Colab notebook that allows you to explore the entire pipeline interactively:
-- [Open the Multimodal RAG Pipeline Notebook](notebook/01-mmrag-blog-quick-start.ipynb)
-- This notebook includes step-by-step instructions and explanations for each stage of the pipeline
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd multimodal-search-system
+```
 
+2. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+3. **Set up environment variables**
+
+Create a `.env` file in the root directory:
+```env
+ELASTICSEARCH_URL=https://your-elasticsearch-url:9200
+ELASTICSEARCH_API_KEY=your_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+## Key Components
+
+### EmbeddingGenerator
+Generates 1024-dimensional embeddings using ImageBind.
+
+**Supported modalities:**
+- `vision`: Images, photos
+- `audio`: WAV files
+- `text`: String inputs
+- `depth`: Depth maps
+
+### ElasticsearchManager
+Manages vector storage and similarity search.
+
+**Key methods:**
+- `index_content()`: Store embeddings with metadata
+- `search_similar()`: Find similar content
+- `delete()`: Remove indexed content
+
+### LLMAnalyzer
+Performs intelligent analysis of search results.
+
+**Capabilities:**
+- Multi-modal data synthesis
+- Pattern recognition
+- Cross-modal correlation analysis
+- Customizable analysis prompts
 
 ## Project Structure
 
 ```
-├── README.md
-├── requirements.txt
-├── notebook/
-│   ├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
+.
 ├── src/
-│   ├── embedding_generator.py   # ImageBind wrapper
-│   ├── elastic_manager.py       # Elasticsearch operations
-│   └── llm_analyzer.py         # GPT-4 integration
-├── stages/
-│   ├── 01-stage/              # File organization
-│   ├── 02-stage/              # Embedding generation
-│   ├── 03-stage/              # Elasticsearch indexing/search
-│   └── 04-stage/              # Evidence analysis
-└── data/                      # Sample data
-    ├── images/
-    ├── audios/
-    ├── texts/
-    └── depths/
-
+│   ├── embedding_generator.py  # ImageBind embedding generation
+│   ├── elastic_manager.py      # Elasticsearch operations
+│   └── llm_analyzer.py         # LLM-based analysis
+├── .env                        # Environment variables
+├── .gitignore
+├── LICENSE
+├── README.md
+└── requirements.txt
 ```
-
-## Sample Data
-
-The repository includes sample evidence files:
-- Images: Crime scene photos and security camera footage
-- Audio: Suspicious sound recordings
-- Text: Mysterious notes and riddles
-- Depth Maps: 3D scene captures
 
 ## How It Works
 
-1. **Evidence Collection**: Files are organized by modality in the `data/` directory
-2. **Embedding Generation**: ImageBind converts each piece of evidence into a 1024-dimensional vector
-3. **Vector Storage**: Elasticsearch stores embeddings with metadata for efficient retrieval
-4. **Similarity Search**: New evidence is compared against the database using k-NN search
-5. **Analysis**: GPT-4 analyzes the connections between evidence to identify suspects
+1. **Embedding Generation**: ImageBind converts all data types into a shared embedding space where semantically similar content clusters together, regardless of modality.
 
+2. **Vector Storage**: Embeddings are indexed in Elasticsearch, enabling fast similarity search using cosine distance.
+
+3. **Cross-Modal Retrieval**: Query with any modality and retrieve relevant content from any other modality.
+
+4. **LLM Analysis**: Results are analyzed by an LLM to identify patterns, make connections, and generate insights.
+
+## Security
+
+- Never commit your `.env` file
+- Use secure API keys
+- Implement proper access controls for Elasticsearch
+- Sanitize inputs before processing
